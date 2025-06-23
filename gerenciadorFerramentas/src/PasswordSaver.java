@@ -9,7 +9,7 @@ public class PasswordSaver implements ActionListener {
     JTextField usernameField = new JTextField();
     JFrame frame = new JFrame();
     JButton confirmButton = new JButton("Confirmar");
-    JLabel label1 = new JLabel("Senha do Funcionário: ");
+    JLabel label1 = new JLabel("ID do Funcionário: ");
     JLabel label2 = new JLabel("Nome do Funcionário: ");
     JLabel label3 = new JLabel("Tela de Cadastro de Funcionário");
     JButton exitButton = new JButton("Voltar");
@@ -60,7 +60,7 @@ public class PasswordSaver implements ActionListener {
         
         if(e.getSource()==confirmButton){
             try (FileWriter writer = new FileWriter("lista_funcionarios.txt", true)) {
-            writer.write(username + ", " + password + System.lineSeparator());
+            writer.write(username + " (" + password + ")"+System.lineSeparator());
             JOptionPane.showMessageDialog(frame, "Password saved!");
             frame.dispose();
             NewWindow myWindow = new NewWindow();

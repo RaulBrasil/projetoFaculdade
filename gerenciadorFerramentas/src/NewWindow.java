@@ -10,7 +10,7 @@ public class NewWindow implements ActionListener{
     JButton cadFunButton = new JButton("Cadastrar Funcionários");
     JButton cadFerButton = new JButton("Cadastrar Ferramentas");
     JButton listaButton = new JButton("Lista de Disponibilidade");
-    JButton removerDevolverButton = new JButton("Registrar Manipulação de Ferramenta");
+    JButton removerDevolverButton = new JButton("Registrar Mudança");
 
     NewWindow(){
         cadFunButton.setBounds(100,145,200,30);
@@ -52,14 +52,14 @@ public class NewWindow implements ActionListener{
             frame.dispose();
             itemSaver itemSaver = new itemSaver();
         }
-        if(e.getSource()==listaButton){
-            frame.dispose();
-            listaPage listaPage = new listaPage();
-        }
         if(e.getSource()==removerDevolverButton){
+            frame.dispose();
+            registrarPagina registrarPagina = new registrarPagina();
+        }
+        if(e.getSource()==listaButton){
             try {
                 frame.dispose();
-                registrarPagina registrarPagina = new registrarPagina();
+                listaPage listaPage = new listaPage();
             } catch (IOException ex) {
                 System.out.println("Algo aconteceu!");
             }

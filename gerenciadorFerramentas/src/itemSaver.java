@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class itemSaver implements ActionListener {
 
-    JPasswordField passwordField = new JPasswordField();
+    JTextField passwordField = new JTextField();
     JTextField usernameField = new JTextField();
     JFrame frame = new JFrame();
     JButton confirmButton = new JButton("Confirmar");
@@ -52,7 +52,7 @@ public class itemSaver implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        char[] passwordChars = passwordField.getPassword();
+        String passwordChars = passwordField.getText();
         String usernameChars = usernameField.getText();
         String password = new String(passwordChars);
         String username = new String(usernameChars);
@@ -60,7 +60,7 @@ public class itemSaver implements ActionListener {
         
         if(e.getSource()==confirmButton){
             try (FileWriter writer = new FileWriter("lista_ferramentas.txt", true)) {
-            writer.write(username + ", " + password + System.lineSeparator());
+            writer.write(username + " ("+ ")" + password + System.lineSeparator());
             JOptionPane.showMessageDialog(frame, "Saved!");
             frame.dispose();
             NewWindow myWindow = new NewWindow();
@@ -95,7 +95,6 @@ public class itemSaver implements ActionListener {
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-            System.out.println("wowzers!");
             }
         }
     }
