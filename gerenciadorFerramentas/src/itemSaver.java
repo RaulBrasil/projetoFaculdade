@@ -60,12 +60,18 @@ public class itemSaver implements ActionListener {
         
         if(e.getSource()==confirmButton){
             try (FileWriter writer = new FileWriter("lista_ferramentas.txt", true)) {
-            writer.write(username + " ("+ ")" + password + System.lineSeparator());
-            JOptionPane.showMessageDialog(frame, "Saved!");
-            frame.dispose();
-            NewWindow myWindow = new NewWindow();
+                writer.write(username + " (" + password + ")" + System.lineSeparator());
+                JOptionPane.showMessageDialog(frame, "Ferramenta Registrada!");
+                frame.dispose();
+                NewWindow myWindow = new NewWindow();
             }catch (IOException ex) {
                ex.printStackTrace(); 
+            }
+            try(FileWriter writer1 = new FileWriter("lista_disponivel.txt",true)){
+                writer1.write(username + " (" + password + ")" + System.lineSeparator());
+            }catch (IOException ex){
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+                ex.printStackTrace(); 
             }
         }
         if(e.getSource()==exitButton){

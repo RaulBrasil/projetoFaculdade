@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class PasswordSaver implements ActionListener {
 
-    JPasswordField passwordField = new JPasswordField();
+    JTextField passwordField = new JTextField();
     JTextField usernameField = new JTextField();
     JFrame frame = new JFrame();
     JButton confirmButton = new JButton("Confirmar");
@@ -52,7 +52,7 @@ public class PasswordSaver implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        char[] passwordChars = passwordField.getPassword();
+        String passwordChars = passwordField.getText();
         String usernameChars = usernameField.getText();
         String password = new String(passwordChars);
         String username = new String(usernameChars);
@@ -60,8 +60,8 @@ public class PasswordSaver implements ActionListener {
         
         if(e.getSource()==confirmButton){
             try (FileWriter writer = new FileWriter("lista_funcionarios.txt", true)) {
-            writer.write(username + " (" + password + ")"+System.lineSeparator());
-            JOptionPane.showMessageDialog(frame, "Password saved!");
+            writer.write(username + " (" + password + ")" + System.lineSeparator());
+            JOptionPane.showMessageDialog(frame, "Funcionário Registrado!");
             frame.dispose();
             NewWindow myWindow = new NewWindow();
             }catch (IOException ex) {

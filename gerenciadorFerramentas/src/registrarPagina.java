@@ -1,7 +1,11 @@
 import java.awt.Font;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 
 public class registrarPagina implements ActionListener{
@@ -85,29 +89,64 @@ public class registrarPagina implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e){
-        /* 
-        char[] funcChars = nomeField.getSelectedItem();
-        char[] ferrChars = ferrField.getSelectedItem();
-        System.out.println(ferrChars);
-        System.out.println(funcChars);
-        String funcionario = new String(funcChars);
-        String ferramenta = new String(ferrChars);
-        System.out.println(ferramenta);
-        System.out.println(funcionario);
-        */
-
         String funcionario = new String((String) nomeField.getSelectedItem());
         String ferramenta = new String((String) ferrField.getSelectedItem());
 
         if(e.getSource()==returnButton){
             frame.dispose();
             NewWindow myWindow = new NewWindow();
-        } //&& acaoField.getSelectedIndex()==1
+        }
+
+
         if(e.getSource()==confirmButton && acaoField.getSelectedItem()=="Devolveu"){ //Devolveu
+            //Registrar ocorrência na lista, que mostra na listaPage
+            try (FileWriter writer = new FileWriter("lista_ocorrencias.txt", true)){
+                writer.write(funcionario + " devolveu " + ferramenta + System.lineSeparator());
+                JOptionPane.showMessageDialog(frame, "Salvo!");
+            }catch (IOException ex){
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            //Colocar a ferramenta de volta na lista_disponivel para poder tirar depois
+            try (FileWriter writer1 = new FileWriter("lista_disponivel.txt", true)){
+                writer1.write(ferramenta + System.lineSeparator());
+                JOptionPane.showMessageDialog(frame, "Salvo!");
+            }catch (IOException ex){
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
             System.out.println("Devolveu!");
         }
+
+
         if(e.getSource()==confirmButton && acaoField.getSelectedItem()=="Removeu"){ //Removeu
             System.out.println("Removeu!");
+
+            //Registra a ocorreência na lista de ocorrencias
+            try (FileWriter writer = new FileWriter("lista_ocorrencias.txt", true)){
+                writer.write(funcionario + " removeu " + ferramenta + System.lineSeparator());
+                JOptionPane.showMessageDialog(frame, "Salvo!");
+            }catch (IOException ex){
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            //Remove o item de disonibilidade
+            String tobeRemoved = (String) ferrField.getSelectedItem();
+            try{
+                Path path = Paths.get("lista_disponivel.txt");
+                List<String> lines = Files.readAllLines(path);
+                boolean removed = lines.removeIf(line -> line.equals(tobeRemoved));
+                if (removed){
+                    Files.write(path, lines);
+                }else{
+                    JOptionPane.showMessageDialog(null,"File not found.");
+                } 
+                }catch (IOException ex){
+                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            }
+
         }
         if(e.getSource()==confirmButton && acaoField.getSelectedItem()=="Desfazer Ocorrencia"){ //Desfazer
             System.out.println("Desfez!");

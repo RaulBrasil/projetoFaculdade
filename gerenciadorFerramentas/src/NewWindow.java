@@ -9,19 +9,22 @@ public class NewWindow implements ActionListener{
     JButton returnButton = new JButton("Retornar");
     JButton cadFunButton = new JButton("Cadastrar Funcionários");
     JButton cadFerButton = new JButton("Cadastrar Ferramentas");
-    JButton listaButton = new JButton("Lista de Disponibilidade");
+    JButton listaButton = new JButton("Lista de Ocorrências");
+    JButton disponButton = new JButton("Checar Disponibilidade");
     JButton removerDevolverButton = new JButton("Registrar Mudança");
 
     NewWindow(){
-        cadFunButton.setBounds(100,145,200,30);
-        cadFerButton.setBounds(100,100,200,30); 
-        returnButton.setBounds(100,280,200,30);
-        listaButton.setBounds(100,190,200,30);
-        removerDevolverButton.setBounds(100,235,200,30);
+        cadFerButton.setBounds(100,60,200,30); 
+        cadFunButton.setBounds(100,105,200,30);
+        listaButton.setBounds(100,150,200,30);
+        removerDevolverButton.setBounds(100,195,200,30);
+        disponButton.setBounds(100,240,200,30);
+        returnButton.setBounds(100,285,200,30);
         cadFunButton.addActionListener(this);
         cadFerButton.addActionListener(this);
         returnButton.addActionListener(this);
         listaButton.addActionListener(this);
+        disponButton.addActionListener(this);
         removerDevolverButton.addActionListener(this);
         frame.setLayout(new java.awt.FlowLayout());
         tituloLabel.setBounds(50,5,325,50);
@@ -31,6 +34,7 @@ public class NewWindow implements ActionListener{
         frame.add(returnButton);
         frame.add(tituloLabel);
         frame.add(listaButton);
+        frame.add(disponButton);
         frame.add(removerDevolverButton);
         frame.setSize(400,400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +64,14 @@ public class NewWindow implements ActionListener{
             try {
                 frame.dispose();
                 listaPage listaPage = new listaPage();
+            } catch (IOException ex) {
+                System.out.println("Algo aconteceu!");
+            }
+        }
+        if(e.getSource()==disponButton){
+            try {
+                frame.dispose();
+                disponPage disponPage = new disponPage();
             } catch (IOException ex) {
                 System.out.println("Algo aconteceu!");
             }
