@@ -20,7 +20,6 @@ public class PasswordSaver implements ActionListener {
         passwordField.setSize(100,50);
         usernameField.setSize(100,50);
         frame.setLayout(new java.awt.FlowLayout());
-        //frame.add(label);
         frame.add(usernameField);
         frame.add(passwordField);
         frame.add(confirmButton);
@@ -37,7 +36,7 @@ public class PasswordSaver implements ActionListener {
         uploadButton.setBounds(135,235,200,30);
         uploadButton.addActionListener(this);
         exitButton.addActionListener(this);
-        label3.setFont(new Font("Arial",Font.PLAIN,20));
+        label3.setFont(new Font("Arial",Font.PLAIN,20)); //Mexe com a fonte
         frame.add(label1);
         frame.add(label2);
         frame.add(label3);
@@ -58,7 +57,7 @@ public class PasswordSaver implements ActionListener {
         String username = new String(usernameChars);
 
         
-        if(e.getSource()==confirmButton){
+        if(e.getSource()==confirmButton){ //Essa função é igual ao que tem em itemSaver.java, com arquivos diferentes
             try (FileWriter writer = new FileWriter("lista_funcionarios.txt", true)) {
             writer.write(username + " (" + password + ")" + System.lineSeparator());
             JOptionPane.showMessageDialog(frame, "Funcionário Registrado!");
@@ -72,7 +71,7 @@ public class PasswordSaver implements ActionListener {
             frame.dispose();
             NewWindow myWindow = new NewWindow();
         }
-        if(e.getSource()==uploadButton){
+        if(e.getSource()==uploadButton){ //Essa função é igual ao que tem em itemSaver.java, com arquivos diferentes
 
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(null);
@@ -90,12 +89,11 @@ public class PasswordSaver implements ActionListener {
                     writer.newLine();
                 }
 
-                JOptionPane.showMessageDialog(null, "Content appended successfully to: " + targetFile.getAbsolutePath());
+                JOptionPane.showMessageDialog(null, "Content appended successfully to: " + targetFile.getAbsolutePath()); //Debug
 
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); //Debug
             }
-            System.out.println("wowzers!");
             }
         }
     }

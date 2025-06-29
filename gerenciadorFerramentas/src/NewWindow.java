@@ -26,7 +26,7 @@ public class NewWindow implements ActionListener{
         listaButton.addActionListener(this);
         disponButton.addActionListener(this);
         removerDevolverButton.addActionListener(this);
-        frame.setLayout(new java.awt.FlowLayout());
+        frame.setLayout(new java.awt.FlowLayout()); //Diferente dos outros, esse usa gerenciador de layout
         tituloLabel.setBounds(50,5,325,50);
         tituloLabel.setFont(new Font("Arial",Font.PLAIN,20));
         frame.add(cadFerButton);
@@ -66,7 +66,7 @@ public class NewWindow implements ActionListener{
                 listaPage listaPage = new listaPage();
             } catch (IOException ex) {
                 System.out.println("Algo aconteceu!");
-            }
+            } //Por causa de motivos além de minha explicação, eu tive que usar um try catch para fazer funcionar
         }
         if(e.getSource()==disponButton){
             try {
@@ -74,7 +74,7 @@ public class NewWindow implements ActionListener{
                 disponPage disponPage = new disponPage();
             } catch (IOException ex) {
                 System.out.println("Algo aconteceu!");
-            }
+            } //Mesma situação nessa
         }
     }
 }

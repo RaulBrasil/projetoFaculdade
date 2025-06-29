@@ -1,11 +1,9 @@
 import java.awt.Font;
 import java.awt.event.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.*; //Para mexer com arquivos
+import java.sql.Timestamp; //Para mexer com tempo
+import java.util.*;
 import javax.swing.*;
 
 public class registrarPagina implements ActionListener{
@@ -18,15 +16,18 @@ public class registrarPagina implements ActionListener{
     JButton confirmButton = new JButton("Confirmar");
     JButton returnButton = new JButton("Retornar");
     JButton uploadButton = new JButton("Cadastrar lista existente");
-    JComboBox nomeField = new JComboBox();
+    JComboBox nomeField = new JComboBox(); //ComboBox é uma caixa de seleção dropdown que mostra várias opçõs
     JComboBox ferrField = new JComboBox();
     JComboBox acaoField = new JComboBox();
+    java.util.Date date= new java.util.Date(); //Para saber a data e horário
+    private final String filePath = "lista_ocorrencias.txt"; //Constante imutável com o arquivo desejado
+    
     public registrarPagina() {
         acaoField.setBounds(100,165,200,30);
 
         acaoField.addItem("Removeu");
         acaoField.addItem("Devolveu");
-        acaoField.addItem("Desfazer Ocorrencia");
+        acaoField.addItem("Desfazer Ocorrencia"); //Adiciona esses itens à combobox desejada
 
         confirmButton.setBounds(100,205,200,30);
         returnButton.setBounds(100,285,200,30); 
@@ -68,7 +69,7 @@ public class registrarPagina implements ActionListener{
         } catch (IOException e){
             JOptionPane.showMessageDialog(acaoField, this, "Error reading file: " + e.getMessage(), 0);
         }
-        nomeField = new JComboBox<>(lines.toArray(new String[0]));
+        nomeField = new JComboBox<>(lines.toArray(new String[0])); //O Array e trycatch antes disso serve para poder usar cada linha de um array como uma entrada em uma ComboBox.
         
         ArrayList<String> lines1 = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("lista_ferramentas.txt"))){
@@ -79,7 +80,7 @@ public class registrarPagina implements ActionListener{
         } catch (IOException e){
             JOptionPane.showMessageDialog(acaoField, this, "Error reading file: " + e.getMessage(), 0);
         }
-        ferrField = new JComboBox<>(lines1.toArray(new String[0]));
+        ferrField = new JComboBox<>(lines1.toArray(new String[0])); //Mesma coisa que o outro
         
         nomeField.setBounds(100,85,200,30);
         ferrField.setBounds(100,125,200,30);
@@ -90,7 +91,7 @@ public class registrarPagina implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
         String funcionario = new String((String) nomeField.getSelectedItem());
-        String ferramenta = new String((String) ferrField.getSelectedItem());
+        String ferramenta = new String((String) ferrField.getSelectedItem()); //Um jeito bem extenso de transformar o item selecionado em uma string utilizavel
 
         if(e.getSource()==returnButton){
             frame.dispose();
@@ -101,7 +102,7 @@ public class registrarPagina implements ActionListener{
         if(e.getSource()==confirmButton && acaoField.getSelectedItem()=="Devolveu"){ //Devolveu
             //Registrar ocorrência na lista, que mostra na listaPage
             try (FileWriter writer = new FileWriter("lista_ocorrencias.txt", true)){
-                writer.write(funcionario + " devolveu " + ferramenta + System.lineSeparator());
+                writer.write("[" + new Timestamp(date.getTime()) +"] " + funcionario + " devolveu " + ferramenta + System.lineSeparator());
                 JOptionPane.showMessageDialog(frame, "Salvo!");
             }catch (IOException ex){
                 ex.printStackTrace();
@@ -115,7 +116,6 @@ public class registrarPagina implements ActionListener{
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-
             System.out.println("Devolveu!");
         }
 
@@ -123,37 +123,72 @@ public class registrarPagina implements ActionListener{
         if(e.getSource()==confirmButton && acaoField.getSelectedItem()=="Removeu"){ //Removeu
             System.out.println("Removeu!");
 
-            //Registra a ocorreência na lista de ocorrencias
+            //Registra a ocorrência na lista de ocorrencias
             try (FileWriter writer = new FileWriter("lista_ocorrencias.txt", true)){
-                writer.write(funcionario + " removeu " + ferramenta + System.lineSeparator());
+                writer.write("[" + new Timestamp(date.getTime()) + "] " + funcionario + " removeu " + ferramenta + System.lineSeparator());
                 JOptionPane.showMessageDialog(frame, "Salvo!");
             }catch (IOException ex){
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            //Remove o item de disonibilidade
+            //Remove o item de disponibilidade
             String tobeRemoved = (String) ferrField.getSelectedItem();
             try{
                 Path path = Paths.get("lista_disponivel.txt");
                 List<String> lines = Files.readAllLines(path);
-                boolean removed = lines.removeIf(line -> line.equals(tobeRemoved));
+                boolean removed = lines.removeIf(line -> line.equals(tobeRemoved)); 
                 if (removed){
                     Files.write(path, lines);
                 }else{
-                    JOptionPane.showMessageDialog(null,"File not found.");
+                    JOptionPane.showMessageDialog(null,"Não removido da disponibilidade. É possível que a ferramenta não exista, ou não esteje disponível.");
                 } 
                 }catch (IOException ex){
                     JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
             }
-
         }
-        if(e.getSource()==confirmButton && acaoField.getSelectedItem()=="Desfazer Ocorrencia"){ //Desfazer
+        if(e.getSource()==confirmButton && acaoField.getSelectedItem()=="Desfazer Ocorrencia"){ //Desfaz a ultima ocorrencia, lendo o arquivo inteiro e selecionando a penultima (a ultima é vazia) e a deletando
+
+            try {
+                Path path = Paths.get(filePath);
+                List<String> lines = Files.readAllLines(path);
+                if (!lines.isEmpty()) {
+                    lines.remove(lines.size() - 1);
+                    Files.write(path, lines);
+                    JOptionPane.showMessageDialog(null,"Ultima ocorrência foi desfeita.");
+                }else{
+                    System.out.println("HUH?!"); //Debug
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            }
             System.out.println("Desfez!");
         }
-        if(e.getSource()==uploadButton){
+        if(e.getSource()==uploadButton){ //Mesma coisa que os outros uploads vistos em PasswordSaver.java e itemSaver.java
+
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(null);
+
+            if (result == JFileChooser.APPROVE_OPTION){
+                File sourceFile = fileChooser.getSelectedFile();
+                File targetFile = new File("lista_ocorrencias.txt");   
+                try (
+                BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, true))
+            ) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+
+                JOptionPane.showMessageDialog(null, "Content appended successfully to: " + targetFile.getAbsolutePath());
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
             System.out.println("Upload!");
         }
     }
 }
-
+}

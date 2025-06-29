@@ -19,8 +19,7 @@ public class itemSaver implements ActionListener {
 
         passwordField.setSize(100,50);
         usernameField.setSize(100,50);
-        frame.setLayout(new java.awt.FlowLayout());
-        //frame.add(label);
+        frame.setLayout(new java.awt.FlowLayout()); //Diferente dos outros, esse utiliza um gerenciador de layout
         frame.add(usernameField);
         frame.add(passwordField);
         frame.add(confirmButton);
@@ -37,7 +36,7 @@ public class itemSaver implements ActionListener {
         uploadButton.setBounds(135,235,200,30);
         uploadButton.addActionListener(this);
         exitButton.addActionListener(this);
-        label3.setFont(new Font("Arial",Font.PLAIN,20));
+        label3.setFont(new Font("Arial",Font.PLAIN,20)); //Mexe com a fonte
         frame.add(label1);
         frame.add(label2);
         frame.add(label3);
@@ -55,22 +54,23 @@ public class itemSaver implements ActionListener {
         String passwordChars = passwordField.getText();
         String usernameChars = usernameField.getText();
         String password = new String(passwordChars);
-        String username = new String(usernameChars);
+        String username = new String(usernameChars); 
+        //Sinceramente, a escolha do jeito que eu coloquei esses quatro Strings foi por causa da forma antiga que eu implementei, mas agora eu não quero mudar.
 
         
         if(e.getSource()==confirmButton){
-            try (FileWriter writer = new FileWriter("lista_ferramentas.txt", true)) {
-                writer.write(username + " (" + password + ")" + System.lineSeparator());
-                JOptionPane.showMessageDialog(frame, "Ferramenta Registrada!");
+            try (FileWriter writer = new FileWriter("lista_ferramentas.txt", true)) { //Cria o arquivo .txt
+                writer.write(username + " (" + password + ")" + System.lineSeparator()); //Adiciona o que está inserido no nome e ID nessa formatação, dentro do .txt
+                JOptionPane.showMessageDialog(frame, "Ferramenta Registrada!"); //Avisa que a operação foi realizada
                 frame.dispose();
                 NewWindow myWindow = new NewWindow();
             }catch (IOException ex) {
                ex.printStackTrace(); 
             }
-            try(FileWriter writer1 = new FileWriter("lista_disponivel.txt",true)){
+            try(FileWriter writer1 = new FileWriter("lista_disponivel.txt",true)){ //Faz a mesma coisa, porém coloca em outro .txt para saber que está disponivel logo depois de criado
                 writer1.write(username + " (" + password + ")" + System.lineSeparator());
             }catch (IOException ex){
-                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage()); //Debug
                 ex.printStackTrace(); 
             }
         }
@@ -80,26 +80,26 @@ public class itemSaver implements ActionListener {
         }
         if(e.getSource()==uploadButton){
 
-            JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showOpenDialog(null);
+            JFileChooser fileChooser = new JFileChooser(); //Uma  janela de seleção de arquivos
+            int result = fileChooser.showOpenDialog(null); //Anota o resultado da janela de seleção de arquivos
 
-            if (result == JFileChooser.APPROVE_OPTION){
-                File sourceFile = fileChooser.getSelectedFile();
-                File targetFile = new File("lista_ferramentas.txt");   
+            if (result == JFileChooser.APPROVE_OPTION){ //Quando 'Confirmar' foi selecionado
+                File sourceFile = fileChooser.getSelectedFile(); //Faz um objeto de classe File com o nome do arquivo selecionado
+                File targetFile = new File("lista_ferramentas.txt"); //Determina um alvo
                 try (
-                BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, true))
+                BufferedReader reader = new BufferedReader(new FileReader(sourceFile)); //lê linha por linha
+                BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile, true)) //Escreve linha por linha, sem sobrescrever o que tinha antes
             ) {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     writer.write(line);
                     writer.newLine();
-                }
+                } //Loop para escrever linha por linha
 
-                JOptionPane.showMessageDialog(null, "Content appended successfully to: " + targetFile.getAbsolutePath());
+                JOptionPane.showMessageDialog(null, "Content appended successfully to: " + targetFile.getAbsolutePath()); //Debug
 
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error:" + ex.getMessage() + JOptionPane.ERROR_MESSAGE); //Debug
             }
             }
         }
