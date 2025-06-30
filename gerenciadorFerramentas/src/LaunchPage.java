@@ -38,8 +38,8 @@ public class LaunchPage extends JFrame implements ActionListener{ //extender JFr
     @Override
     public void actionPerformed(ActionEvent e){ //A função que verifica qual interação ocorreu.
         if(e.getSource()==myButton){ //Verifica qual é a fonte da interação.
-            frame.dispose(); //Remove a janela anterior.
             NewWindow myWindow = new NewWindow();
+            frame.dispose(); //Remove a janela anterior.
         }
         if(e.getSource()==informacao){
             frame.dispose();

@@ -1,6 +1,8 @@
 import java.awt.Font;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.file.*; //Para mexer com arquivos
+import java.util.List;
 import javax.swing.*;
 
 public class PasswordSaver implements ActionListener {
@@ -14,6 +16,8 @@ public class PasswordSaver implements ActionListener {
     JLabel label3 = new JLabel("Tela de Cadastro de Funcionário");
     JButton exitButton = new JButton("Voltar");
     JButton uploadButton = new JButton("Cadastrar lista existente");
+    JButton undoButton = new JButton("Remover ultimo funcionário");
+    private final String filePath = "lista_funcionarios.txt"; //Constante imutável com o arquivo desejado
 
     PasswordSaver() {
 
@@ -23,17 +27,18 @@ public class PasswordSaver implements ActionListener {
         frame.add(usernameField);
         frame.add(passwordField);
         frame.add(confirmButton);
-
+        frame.add(undoButton);
+        undoButton.addActionListener(this);
         confirmButton.addActionListener(this);
-
         passwordField.setBounds(135,145,200,30);
         usernameField.setBounds(135,100,200,30);
-        confirmButton.setBounds(135,190,200,30);
+        confirmButton.setBounds(135,180,200,30);
         label1.setBounds(5,140,175,40);
         label2.setBounds(5,95,175,40);
         label3.setBounds(40,5,325,50);
-        exitButton.setBounds(135,305,200,30);
-        uploadButton.setBounds(135,235,200,30);
+        exitButton.setBounds(135,285,200,30);
+        uploadButton.setBounds(135,215,200,30);
+        undoButton.setBounds(135,250,200,30);
         uploadButton.addActionListener(this);
         exitButton.addActionListener(this);
         label3.setFont(new Font("Arial",Font.PLAIN,20)); //Mexe com a fonte
@@ -42,6 +47,7 @@ public class PasswordSaver implements ActionListener {
         frame.add(label3);
         frame.add(exitButton);
         frame.add(uploadButton);
+        frame.add(undoButton);
         frame.setSize(400, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -95,6 +101,23 @@ public class PasswordSaver implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Error appending file: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); //Debug
             }
             }
+        }
+        if(e.getSource()==undoButton){
+            try {
+                Path path = Paths.get(filePath);
+                List<String> lines = Files.readAllLines(path);
+                if (!lines.isEmpty()) {
+                    lines.remove(lines.size() - 1);
+                    Files.write(path, lines);
+                    JOptionPane.showMessageDialog(null,"Ultimo funcionário foi removido.");
+                }else{
+                    System.out.println("HUH?!"); //Debug
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            }
+            System.out.println("Desfez!");
         }
     }
 }
